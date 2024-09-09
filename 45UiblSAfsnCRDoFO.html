@@ -1,0 +1,297 @@
+<html><head><base href="https://vivaverde.app/app">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viva Verde - Sua Fazenda Urbana</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary-color: #3ec970;
+        --secondary-color: #2ecc71;
+        --background-color: #f0f8f0;
+        --text-color: #333;
+        --accent-color: #ff6b6b;
+    }
+    
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+    
+    .app-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+        margin: 0;
+        font-size: 2.5rem;
+    }
+    
+    nav {
+        background-color: white;
+        padding: 10px 0;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+    }
+    
+    nav ul li {
+        margin: 0 15px;
+    }
+    
+    nav ul li a {
+        text-decoration: none;
+        color: var(--text-color);
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+    
+    nav ul li a:hover {
+        color: var(--primary-color);
+    }
+    
+    .search-bar {
+        display: flex;
+        margin-bottom: 20px;
+    }
+    
+    .search-bar input {
+        flex-grow: 1;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px 0 0 5px;
+    }
+    
+    .search-bar button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        border-radius: 0 5px 5px 0;
+        transition: background-color 0.3s ease;
+    }
+    
+    .search-bar button:hover {
+        background-color: var(--secondary-color);
+    }
+    
+    .plant-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    .plant-card {
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .plant-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .plant-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .plant-info {
+        padding: 15px;
+    }
+    
+    .plant-name {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .plant-description {
+        font-size: 0.9rem;
+        color: #666;
+    }
+    
+    .reviews-section {
+        margin-top: 40px;
+    }
+    
+    .review {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .review-author {
+        font-weight: 600;
+    }
+    
+    .review-rating {
+        color: var(--accent-color);
+    }
+    
+    .review-content {
+        font-style: italic;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .fade-in {
+        animation: fadeIn 0.5s ease-in;
+    }
+</style>
+</head>
+<body>
+<header>
+    <h1>Viva Verde</h1>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#plantas">Plantas</a></li>
+        <li><a href="#dicas">Dicas de Cultivo</a></li>
+        <li><a href="#comunidade">Comunidade</a></li>
+        <li><a href="#sobre">Sobre Nós</a></li>
+    </ul>
+</nav>
+
+<div class="app-container">
+    <div class="search-bar">
+        <input type="text" id="plant-search" placeholder="Busque por plantas...">
+        <button onclick="searchPlants()">Buscar</button>
+    </div>
+
+    <div class="plant-grid" id="plant-grid">
+        <!-- Plant cards will be dynamically inserted here -->
+    </div>
+
+    <div class="reviews-section">
+        <h2>Avaliações dos Clientes</h2>
+        <div id="reviews-container">
+            <!-- Reviews will be dynamically inserted here -->
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script>
+    const plants = [
+        { name: "Tomate Cereja", image: "https://example.com/tomate-cereja.jpg", description: "Pequeno e saboroso, perfeito para saladas." },
+        { name: "Alface Crespa", image: "https://example.com/alface-crespa.jpg", description: "Folhas crocantes e nutritivas." },
+        { name: "Manjericão", image: "https://example.com/manjericao.jpg", description: "Erva aromática versátil para diversos pratos." },
+        { name: "Pimentão", image: "https://example.com/pimentao.jpg", description: "Colorido e rico em vitamina C." },
+        { name: "Morango", image: "https://example.com/morango.jpg", description: "Fruta doce e suculenta." },
+        { name: "Cebolinha", image: "https://example.com/cebolinha.jpg", description: "Tempero fresco para finalizar pratos." },
+        { name: "Rúcula", image: "https://example.com/rucula.jpg", description: "Folha picante e nutritiva." },
+        { name: "Hortelã", image: "https://example.com/hortela.jpg", description: "Erva refrescante para chás e drinks." },
+        { name: "Coentro", image: "https://example.com/coentro.jpg", description: "Tempero aromático para diversos pratos." },
+        { name: "Salsinha", image: "https://example.com/salsinha.jpg", description: "Erva versátil para decorar e dar sabor." },
+        // ... adicione mais 90 plantas para chegar a 100 variedades
+    ];
+
+    function displayPlants(plantsToShow) {
+        const plantGrid = document.getElementById('plant-grid');
+        plantGrid.innerHTML = '';
+        plantsToShow.forEach(plant => {
+            const plantCard = document.createElement('div');
+            plantCard.className = 'plant-card fade-in';
+            plantCard.innerHTML = `
+                <img src="${plant.image}" alt="${plant.name}" class="plant-image">
+                <div class="plant-info">
+                    <div class="plant-name">${plant.name}</div>
+                    <div class="plant-description">${plant.description}</div>
+                </div>
+            `;
+            plantGrid.appendChild(plantCard);
+        });
+    }
+
+    function searchPlants() {
+        const searchTerm = document.getElementById('plant-search').value.toLowerCase();
+        const filteredPlants = plants.filter(plant => 
+            plant.name.toLowerCase().includes(searchTerm) || 
+            plant.description.toLowerCase().includes(searchTerm)
+        );
+        displayPlants(filteredPlants);
+    }
+
+    // Inicializar a exibição de plantas
+    displayPlants(plants);
+
+    // Simulação de avaliações em tempo real
+    const reviews = [
+        { author: "Maria Silva", rating: 5, content: "Adorei o app! Minha horta nunca esteve tão bonita.", timestamp: new Date() },
+        { author: "João Oliveira", rating: 4, content: "Muito útil para iniciantes. As dicas são ótimas.", timestamp: new Date() },
+        { author: "Ana Rodrigues", rating: 5, content: "Incrível variedade de plantas. Recomendo!", timestamp: new Date() }
+    ];
+
+    function displayReviews() {
+        const reviewsContainer = document.getElementById('reviews-container');
+        reviewsContainer.innerHTML = '';
+        reviews.forEach(review => {
+            const reviewElement = document.createElement('div');
+            reviewElement.className = 'review fade-in';
+            reviewElement.innerHTML = `
+                <div class="review-header">
+                    <span class="review-author">${review.author}</span>
+                    <span class="review-rating">★ ${review.rating}</span>
+                </div>
+                <div class="review-content">${review.content}</div>
+                <div class="review-timestamp">${moment(review.timestamp).fromNow()}</div>
+            `;
+            reviewsContainer.appendChild(reviewElement);
+        });
+    }
+
+    // Exibir avaliações iniciais
+    displayReviews();
+
+    // Simular novas avaliações chegando em tempo real
+    setInterval(() => {
+        const newReview = {
+            author: `Usuário${Math.floor(Math.random() * 1000)}`,
+            rating: Math.floor(Math.random() * 5) + 1,
+            content: "Esta é uma nova avaliação gerada automaticamente para simular atualizações em tempo real.",
+            timestamp: new Date()
+        };
+        reviews.unshift(newReview);
+        if (reviews.length > 10) reviews.pop(); // Manter apenas as 10 avaliações mais recentes
+        displayReviews();
+    }, 30000); // Adiciona uma nova avaliação a cada 30 segundos
+</script>
+</body></html>
